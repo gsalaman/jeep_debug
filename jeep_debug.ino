@@ -1,30 +1,31 @@
 #include <SoftwareSerial.h>
 #include "ver_led.h"
 
+#define DEBUG_SERIAL
+
 SoftwareSerial XBee(2,3);
 
-//#define DEBUG_SERIAL
-#define DEBUG_XBEE
+// Simple version of debug print only takes strings.  Use sprintf if you
+// want to embed paramenters.  Currently sending newline to determine when the string
+// is done....no newline needed in the string itself.
+void debug_print(char *string)
+{
 
-#if defined(DEBUG_SERIAL) && defined(DEBUG_XBEE)
-  #define DEBUG_PRINT(x) Serial.print(x); XBee.print(x)
-#elif defined(DEBUG_SERIAL)
-  #define DEBUG_PRINT(x) Serial.print(x)
-  #define DEBUG_PRINTLN(x) Serial.println(x)
-#elif defined (DEBUG_XBEE)
-  #define DEBUG_PRINT(x) XBee.print(x)
-  #define DEBUG_PRINTLN(x) XBee.println(x)
+#ifdef DEBUG_SERIAL
+  Serial.println(string); 
 #endif
-
+   
+  XBee.println(string);
+}
 
 void setup() 
 {
  Serial.begin(9600);
  XBee.begin(9600);
 
- ver_led_setup(1);
+ ver_led_setup(2);
   
- DEBUG_PRINTLN("Setup finished");
+ debug_print("Setup finished");
  
 }
 
@@ -35,9 +36,12 @@ void setup()
 void loop() 
 {
   static int i=0;
-
-  DEBUG_PRINTLN(i++);
+  char debug_string[40];
+  
   ver_led_run();
+  
+  sprintf(debug_string, "Number %d", i++);
+  debug_print(debug_string);
   
   delay(300);
 }
