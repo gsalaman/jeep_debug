@@ -1,9 +1,12 @@
 #include <SoftwareSerial.h>
-#include "ver_led.h"
+//#include "ver_led.h"
 
 SoftwareSerial XBee(2,3);
 
 //#define DEBUG_SERIAL
+
+//quick and dirty remove the #defines...
+#if 0
 #define DEBUG_XBEE
 
 #if defined(DEBUG_SERIAL) && defined(DEBUG_XBEE)
@@ -15,16 +18,26 @@ SoftwareSerial XBee(2,3);
   #define DEBUG_PRINT(x) XBee.print(x)
   #define DEBUG_PRINTLN(x) XBee.println(x)
 #endif
+#endif  // 0
 
+void debug_print(char *string)
+{
+
+  #ifdef DEBUG_SERIAL
+  Serial.println(string);
+  #endif
+  
+  XBee.println(string);
+}
 
 void setup() 
 {
  Serial.begin(9600);
  XBee.begin(9600);
 
- ver_led_setup(1);
+ //ver_led_setup(1);
   
- DEBUG_PRINTLN("Setup finished");
+ debug_print("Setup finished");
  
 }
 
@@ -35,9 +48,13 @@ void setup()
 void loop() 
 {
   static int i=0;
+  char my_string[40];
 
-  DEBUG_PRINTLN(i++);
-  ver_led_run();
+  sprintf(my_string, "Number: %d", i);
+  debug_print(my_string);
+  i++;
+  
+  //ver_led_run();
   
   delay(300);
 }
