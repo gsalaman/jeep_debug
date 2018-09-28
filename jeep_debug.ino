@@ -3,7 +3,7 @@
 
 SoftwareSerial XBee(2,3);
 
-//#define DEBUG_SERIAL
+#define DEBUG_SERIAL
 
 //quick and dirty remove the #defines...
 #if 0
@@ -52,9 +52,12 @@ void loop()
 
   sprintf(my_string, "Number: %d", i);
   debug_print(my_string);
+  if (i<50)
   i++;
+  else 
+  i=0;
   
   //ver_led_run();
   
-  delay(300);
+  delay(100);
 }
